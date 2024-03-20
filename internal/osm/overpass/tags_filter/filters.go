@@ -19,7 +19,3 @@ func filterPrimary(value string) bool {
 
 	return false
 }
-
-func blacklist(value string) bool {
-	return false
-}

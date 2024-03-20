@@ -2,21 +2,6 @@ package tags_filter
 
 var ValidTags = []Tag{
 	{
-		Name:   "name",
-		Alias:  "Name",
-		Filter: blacklist,
-	},
-	{
-		Name:   "old_name",
-		Alias:  "Old Name",
-		Filter: blacklist,
-	},
-	{
-		Name:   "alt_name",
-		Alias:  "Alternate Name",
-		Filter: blacklist,
-	},
-	{
 		Name:   "diet:vegetarian",
 		Alias:  "Vegetarian Options",
 		Filter: filterBoolean,
