@@ -9,6 +9,7 @@ import (
 	"github.com/jamieyoung5/pooblet/internal/verification"
 	"log"
 	"net/http"
+	"os"
 	"sort"
 )
 
@@ -81,10 +82,14 @@ func main() {
 }*/
 
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 	r := mux.NewRouter()
 	r.HandleFunc("/getPub", handlers.GetPubHandler).Methods(http.MethodGet)
 	r.Use(handlers.CORSMiddleware)
 
-	log.Println("Server is running on port 8080...")
-	log.Fatal(http.ListenAndServe(":4343", r))
+	log.Println("Server is running on port " + port + "...")
+	log.Fatal(http.ListenAndServe(":"+port, r))
 }
