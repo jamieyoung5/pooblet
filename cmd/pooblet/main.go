@@ -2,14 +2,18 @@ package main
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/jamieyoung5/pooblet/internal/handlers"
 	"github.com/jamieyoung5/pooblet/internal/osm/overpass"
 	"github.com/jamieyoung5/pooblet/internal/roulette"
 	"github.com/jamieyoung5/pooblet/internal/verification"
+	"log"
+	"net/http"
 	"sort"
 )
 
 // Function to execute the Overpass query
-func getPubs(lat, lon float64, rad int) {
+func getPubs2(lat, lon float64, rad int) {
 	latitude, longitude, err := verification.VerifyLocation(lon, lat)
 	if err != nil {
 		panic(err)
@@ -49,7 +53,7 @@ func getPubs(lat, lon float64, rad int) {
 
 }
 
-func getPubsForRealzies(lat, lon float64, rad int) {
+func getPubs(lat, lon float64, rad int) {
 	pubRoulette := roulette.NewGame()
 	latitude, longitude, err := verification.VerifyLocation(lon, lat)
 	if err != nil {
@@ -68,9 +72,19 @@ func getPubsForRealzies(lat, lon float64, rad int) {
 	fmt.Println(pub)
 }
 
+/*
 func main() {
 	lat, lon := 55.953251, -3.188267
 	radius := 500 // in meters
 
-	getPubsForRealzies(lat, lon, radius)
+	getPubs(lat, lon, radius)
+}*/
+
+func main() {
+	r := mux.NewRouter()
+	r.HandleFunc("/getPub", handlers.GetPubHandler).Methods(http.MethodGet)
+	r.Use(handlers.CORSMiddleware)
+
+	log.Println("Server is running on port 8080...")
+	log.Fatal(http.ListenAndServe(":4343", r))
 }

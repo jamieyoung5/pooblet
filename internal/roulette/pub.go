@@ -12,3 +12,5 @@ type Pub struct {
 	Address   *nominatim.Address
 	Name      tags_filter.Names
 }
+
+var amenities = []string{"pub", "bar"}

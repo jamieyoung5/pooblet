@@ -1,3 +1,4 @@
+// Package nominatim is a tool that provides a sort of 'search engine' for OpenStreetMap data
 package nominatim
 
 import (
@@ -7,12 +8,13 @@ import (
 	"net/http"
 )
 
-var nominatimReverseGeocode = "https://nominatim.openstreetmap.org/reverse?format=json&lat=%f&lon=%f"
+const nominatimReverseGeocode = "https://nominatim.openstreetmap.org/reverse?format=json&lat=%f&lon=%f"
 
+// ReverseGeocode uses the nominatim api to take a longitude and latitude and provide an address correlating to that position
 func ReverseGeocode(lat, lon float64) (*Address, error) {
-	url := fmt.Sprintf(nominatimReverseGeocode, lat, lon)
+	address := fmt.Sprintf(nominatimReverseGeocode, lat, lon)
 
-	response, err := http.Get(url)
+	response, err := http.Get(address)
 	if err != nil {
 		return nil, err
 	}

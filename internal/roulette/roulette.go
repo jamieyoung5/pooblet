@@ -1,19 +1,18 @@
 package roulette
 
 import (
+	"errors"
 	"github.com/jamieyoung5/pooblet/internal/osm/overpass"
 	"math/rand"
 )
 
 type Game struct{}
 
-var amenities []string = []string{"pub", "bar"}
-
 func NewGame() *Game {
 	return &Game{}
 }
 
-func (game *Game) Play(lat, long string, radius string) (*Pub, error) {
+func (g *Game) Play(lat, long string, radius string) (*Pub, error) {
 	var results []overpass.Places
 	for _, amenity := range amenities {
 		result, err := overpass.GetAmenitiesInRadius(lat, long, radius, amenity)
@@ -22,13 +21,16 @@ func (game *Game) Play(lat, long string, radius string) (*Pub, error) {
 		}
 		results = append(results, result)
 	}
-	places := game.combinePlaces(results)
-	randomPlace := places[game.getRandomPlace(places)]
+	places := g.combinePlaces(results)
+	if len(places) <= 0 {
+		return nil, errors.New("no places found")
+	}
+	randomPlace := places[g.getRandomPlace(places)]
 
 	return parsePlaceToPub(randomPlace)
 }
 
-func (game *Game) getRandomPlace(places overpass.Places) int {
+func (g *Game) getRandomPlace(places overpass.Places) int {
 	placeIndex := rand.Intn(len(places))
 	for id, _ := range places {
 		if placeIndex == 0 {
@@ -36,10 +38,11 @@ func (game *Game) getRandomPlace(places overpass.Places) int {
 		}
 		placeIndex--
 	}
-	panic("unreachable")
+
+	return 0
 }
 
-func (game *Game) combinePlaces(placesByAmenity []overpass.Places) (combinedPlaces overpass.Places) {
+func (g *Game) combinePlaces(placesByAmenity []overpass.Places) (combinedPlaces overpass.Places) {
 	combinedPlaces = make(overpass.Places)
 
 	for _, places := range placesByAmenity {
